@@ -4,7 +4,7 @@ import { compareTwoDates, convertDateFromInput } from './date';
 
 const maxPages: number = 10;
 const initialPage: number = 1;
-const BASE_URL: string = "https://newsmada.com/category/les-nouvelles/";
+const BASE_URL: string = "https://newsmada.com/category/";
 
 const headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
@@ -63,11 +63,11 @@ export function testDate(searchTags: string[], date: string) {
     return { searchTags, date: 0 }
 }
 
-export async function startGatheringFromNouvelles(searchTags: string[], date: string) {
+export async function startGatheringFromNouvelles(source: string, searchTags: string[], date: string) {
     let stop = false;
     for (let i = initialPage; i <= maxPages; i++) {
         console.log(`Gathering page ${i}`);
-        const url: string = `${BASE_URL}/page/${i}`;
+        const url: string = `${BASE_URL}/${source}/page/${i}`;
         const req = await fetch(url, { headers });
         const body = await req.text();
         const frontArticles: ArticleInfo[] = gatherAllRelevantArticles(searchTags, body);

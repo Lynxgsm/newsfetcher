@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import Input from "../FormElements/Input";
 import Button from "../Button";
 import { DateTime } from "luxon";
@@ -9,13 +9,18 @@ import { useSnapshot } from "valtio";
 import { states } from "@/states";
 import Spinner from "../Spinner";
 import { formatFormToObject } from "@/utils/form";
+import Select from "../FormElements/Select";
 
 const FetchForm = () => {
   const { setArticles, loading, toggleLoading } = useSnapshot(states);
+  const [tag, setTag] = useState("toe-karena,politika");
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const input = formatFormToObject(formData);
+
+    input.tags = tag;
 
     toggleLoading();
     const result = await fetch("/api/news", {
@@ -36,6 +41,29 @@ const FetchForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-4 p-8 items-center">
+      <Select
+        label="Source"
+        name="source"
+        onChange={(e) => {
+          const value = e.currentTarget.value;
+          if (value === "taratra") {
+            setTag("toe-karena,politika");
+            return;
+          }
+
+          setTag("politique,economie");
+        }}
+        options={[
+          {
+            display: "Taratra",
+            value: "taratra",
+          },
+          {
+            display: "Les nouvelles",
+            value: "les-nouvelles",
+          },
+        ]}
+      />
       <Input
         label="Date"
         defaultValue={now}
@@ -48,7 +76,7 @@ const FetchForm = () => {
         label="Tags"
         name="tags"
         placeholder="Separated by comma"
-        defaultValue={"politique,economie"}
+        value={tag}
         required
       />
       {loading ? (

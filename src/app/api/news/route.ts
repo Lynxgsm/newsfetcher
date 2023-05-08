@@ -12,7 +12,7 @@ export async function GET(Request: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-    const { date, tags } = await req.json();
-    const results = await startGatheringFromNouvelles(tags.split(','), date)
+    const { source, date, tags } = await req.json();
+    const results = await startGatheringFromNouvelles(source, tags.split(','), date)
     return NextResponse.json(results)
 }
