@@ -28,10 +28,12 @@ const FetchForm = () => {
       body: JSON.stringify(input),
     });
 
-    const jsonData = (await result.json()) as Article[];
+    if (result.status === 200) {
+      const jsonData = (await result.json()) as Article[];
 
-    if (jsonData.length > 0) {
-      setArticles(jsonData);
+      if (jsonData.length > 0) {
+        setArticles(jsonData);
+      }
     }
 
     toggleLoading();
